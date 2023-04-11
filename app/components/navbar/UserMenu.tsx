@@ -1,7 +1,8 @@
 "use client"
 import useLoginrModal from "@/app/hooks/useLoginModal"
 import useRegisterModal from "@/app/hooks/useLoginModal"
-import { User } from "@prisma/client"
+import useRentModal from "@/app/hooks/useRentModal"
+import { SafeUser } from "@/app/types"
 import { signOut } from "next-auth/react"
 import { useCallback, useState } from "react"
 import { AiOutlineMenu } from "react-icons/ai"
@@ -10,7 +11,7 @@ import LoginModal from "../modals/LoginModal"
 import MenuItem from "./MenuItem"
 
 interface UserMenuProps {
-    currentUser?: User | null
+    currentUser?: SafeUser | null
 }
 
 export const UserMenu: React.FC<UserMenuProps> = ({
@@ -18,18 +19,27 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 }) => {
     const registerModal = useRegisterModal()
     const loginModal = useLoginrModal()
+    const rentModal = useRentModal()
     const [isOpen, setIsOpen] = useState(false)
     const toggleOpen = useCallback(() => {
         setIsOpen((value) => !value)
-
     }, [])
+
+
+    const onRent = useCallback(() => {
+        console.log("CHekc");
+        if (!currentUser) {
+            return loginModal.onOpen()
+        }
+        rentModal.onOpen()
+    }, [currentUser, loginModal, rentModal])
 
 
     return (
         <div className="relative">
             <div className="flex flex-row items-center gap-3">
                 <div
-                    onClick={() => { }}
+                    onClick={onRent}
                     className="
               hidden
               md:block
@@ -104,8 +114,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
                                     onClick={() => { }}
                                 />
                                 <MenuItem
-                                    label="Airbnb your home"
-                                    onClick={() => { }}
+                                    label="Airbnb my home"
+                                    onClick={rentModal.onOpen}
                                 />
                                 <hr />
                                 <MenuItem
