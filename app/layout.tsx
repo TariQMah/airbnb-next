@@ -1,39 +1,42 @@
-import { Nunito } from "next/font/google"
-import getCurentUser from "./actions/getCurrentUser"
-import ClientOnly from "./components/ClientOnly"
-import LoginModal from "./components/modals/LoginModal"
-import RegisterModal from "./components/modals/LoginModal"
-import RentModal from "./components/modals/RentModal"
-import Navbar from "./components/navbar/Navbar"
+import { Nunito } from 'next/font/google'
+
+import Navbar from '@/app/components/navbar/Navbar';
+import LoginModal from '@/app/components/modals/LoginModal';
+import RegisterModal from '@/app/components/modals/RegisterModal';
+import SearchModal from '@/app/components/modals/SearchModal';
+import RentModal from '@/app/components/modals/RentModal';
+
+import ToasterProvider from '@/app/providers/ToasterProvider';
 
 import './globals.css'
-import ToasterProvider from "./providers/ToasterProvider"
-
+import ClientOnly from './components/ClientOnly';
+import getCurrentUser from './actions/getCurrentUser';
 
 export const metadata = {
   title: 'Airbnb',
-  description: 'airbnb',
+  description: 'Airbnb Clone',
 }
-const font = Nunito({
-  subsets: ['latin']
-})
+
+const font = Nunito({ 
+  subsets: ['latin'], 
+});
 
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-
-  const currentUser = await getCurentUser()
+  const currentUser = await getCurrentUser();
 
   return (
     <html lang="en">
       <body className={font.className}>
         <ClientOnly>
           <ToasterProvider />
-          <RegisterModal />
-          <RentModal />
           <LoginModal />
+          <RegisterModal />
+          <SearchModal />
+          <RentModal />
           <Navbar currentUser={currentUser} />
         </ClientOnly>
         <div className="pb-20 pt-28">
